@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuReel Quotation & Dashboard</title>
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="nav-tabs">
+        <button id="tab-form" class="active-tab" onclick="clearFormIfNew(); showSection('form-section')">📝 Create New</button>
+        <button id="tab-history" onclick="showSection('history-section')">📊 Dashboard & History</button>
+    </div>
+
+    <!-- Custom Password Modal -->
+    <div id="custom-pass-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 30px; border-radius: 10px; text-align: center; max-width: 300px; width: 90%;">
+            <h3 style="margin-top: 0; color: #333;">Enter Password</h3>
+            <p style="font-size: 14px; color: #666; margin-bottom: 20px;">Dashboard is locked for security.</p>
+            <input type="password" id="custom-pass-input" placeholder="Enter PIN" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; text-align: center; font-size: 18px; box-sizing: border-box;">
+            <button onclick="checkPassword()" style="background: #a32a2a; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold;">Unlock</button>
+            <button onclick="closePassModal()" style="background: #ccc; color: #333; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px; font-weight: bold;">Cancel</button>
+            <p id="pass-error-msg" style="color: red; font-size: 12px; margin-top: 10px; display: none;">Incorrect Password!</p>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- FORM SECTION -->
+    <!-- ========================================== -->
+    <div id="form-section" class="container">
+        <h2 id="form-title" style="text-align: center; color: #333; margin-bottom: 25px;">Create Quotation</h2>
+        
+        <form id="quotation-form">
+            <input type="hidden" id="firebase_doc_id">
+            <input type="hidden" id="edit_id">
+
+            <div class="form-grid">
+                <div>
+                    <label>Client Name</label>
+                    <input type="text" id="c_name" placeholder="e.g. Client Name" required class="form-control">
+                </div>
+                <div>
+                    <label>Phone Number</label>
+                    <input type="text" id="c_phone" placeholder="e.g. 01XXXXXXXXX" required class="form-control">
+                </div>
+                <div>
+                    <label>Event Type</label>
+                    <select id="c_event" required class="form-control">
+                        <option value="Wedding">Wedding</option>
+                        <option value="Pre-Wedding">Pre-Wedding</option>
+                        <option value="Post-Wedding">Post-Wedding</option>
+                        <option value="Reception">Reception</option>
+                        <option value="Cinematography">Cinematography</option>
+                        <option value="Birthday">Birthday</option>
+                        <option value="Corporate">Corporate</option>
+                        <option value="Fashion Shoot">Fashion Shoot</option>
+                        <option value="Product Shoot">Product Shoot</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Event Date(s)</label>
+                    <input type="text" id="c_date" placeholder="Select Event Date(s)" required class="form-control">
+                </div>
+                <div>
+                    <label>Number of Shifts</label>
+                    <input type="number" id="c_num_shifts" placeholder="e.g. 2" required class="form-control" min="1">
+                </div>
+                <div>
+                    <label>Shift Details</label>
+                    <input type="text" id="c_shift_details" placeholder="e.g. Morning & Evening" required class="form-control">
+                </div>
+                <div>
+                    <label>No. of Photographers</label>
+                    <input type="number" id="c_photo_count" placeholder="e.g. 2" class="form-control" min="0">
+                </div>
+                <div>
+                    <label>No. of Cinematographers</label>
+                    <input type="number" id="c_cinema_count" placeholder="e.g. 1" class="form-control" min="0">
+                </div>
+                <div>
+                    <label>Gear Details (Optional)</label>
+                    <input type="text" id="c_gear" placeholder="e.g. Sony A7IV, Drone, Ronin RS3" class="form-control">
+                </div>
+                <div>
+                    <label>Venue</label>
+                    <input type="text" id="c_venue" placeholder="e.g. Dhaka" required class="form-control">
+                </div>
+                <div>
+                    <label>Payment Method</label>
+                    <select id="c_payment" class="form-control">
+                        <option value="Cash">Cash</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="bKash">bKash</option>
+                        <option value="Nagad">Nagad</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Printed Photos / Album Details</label>
+                    <input type="text" id="c_prints" placeholder="e.g. 50 Units 4R Print" class="form-control">
+                </div>
+                <div>
+                    <label>Physical Delivery Option</label>
+                    <input type="text" id="c_delivery" placeholder="e.g. Pendrive / Custom Box" class="form-control">
+                </div>
+                <div>
+                    <label>Delivery Time Selection</label>
+                    <select id="c_delivery_time" class="form-control">
+                        <option value="On Season">On Season (30-45 Days)</option>
+                        <option value="Off Season">Off Season (15-30 Days)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Currency</label>
+                    <select id="c_currency" class="form-control">
+                        <option value="BDT">BDT (৳)</option>
+                        <option value="USD">USD ($)</option>
+                        <option value="EUR">EUR (€)</option>
+                        <option value="KRW">KRW (₩)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="checkbox-container">
+                <input type="checkbox" id="c_extra_time" checked disabled>
+                <label for="c_extra_time">Include "Extra Time" (Default for BDT)</label>
+            </div>
+            <div class="checkbox-container">
+                <input type="checkbox" id="c_show_contact" checked>
+                <label for="c_show_contact">Show Company Contact Details (Footer)</label>
+            </div>
+            <div class="checkbox-container">
+                <input type="checkbox" id="c_show_terms" checked>
+                <label for="c_show_terms">Include Terms & Conditions Page</label>
+            </div>
+
+            <hr>
+            <h3>Package & Pricing Options</h3>
+            <div class="form-grid">
+                <div>
+                    <label>Primary Package Name</label>
+                    <input type="text" id="p_name" placeholder="e.g. Premium Wedding Package" required class="form-control">
+                </div>
+                <div>
+                    <label>Package Price (Per Shift)</label>
+                    <input type="number" id="p_price" placeholder="e.g. 15000" required class="form-control" min="0">
+                </div>
+                
+                <div style="grid-column: 1 / -1;">
+                    <label>Extra Services (Optional)</label>
+                    <div id="extra-services-container">
+                        <div class="extra-service-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="text" class="form-control e_name_input" placeholder="Service Name (e.g. Drone)">
+                            <input type="number" class="form-control e_price_input" placeholder="Price (e.g. 5000)" min="0">
+                            <button type="button" class="btn-remove-extra" onclick="removeExtraRow(this)" style="display:none;">❌</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-add-extra" onclick="addExtraRow()">+ Add More Service</button>
+                </div>
+
+                <div style="grid-column: 1 / -1;">
+                    <label>Travel Charge (Optional)</label>
+                    <input type="number" id="t_charge" placeholder="e.g. 1000" class="form-control" min="0">
+                </div>
+            </div>
+            <hr>
+            <h3>Discount, VAT & Payments</h3>
+            <div class="form-grid">
+                <div>
+                    <label>Discount (%)</label>
+                    <input type="number" id="discount_pct" placeholder="e.g. 10" class="form-control" min="0" max="100">
+                </div>
+                <div>
+                    <label>VAT (%)</label>
+                    <input type="number" id="vat_pct" placeholder="e.g. 5" class="form-control" min="0" max="100">
+                </div>
+                <div>
+                    <label>Advance Payment Received</label>
+                    <input type="number" id="adv_pay" placeholder="e.g. 5000" class="form-control" min="0">
+                </div>
+                <div>
+                    <label>Pay Against Due (Edit Mode)</label>
+                    <input type="number" id="due_pay" placeholder="Only available in Edit Mode" class="form-control" min="0" disabled style="background-color: #f5f5f5;">
+                </div>
+                <div style="grid-column: 1 / -1;">
+                    <label>Signature Option</label>
+                    <select id="c_signature" class="form-control">
+                        <option value="None">None</option>
+                        <option value="Shovon">Shovon</option>
+                        <option value="Sazzid">Sazzid</option>
+                    </select>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit" id="submit-btn-text">Generate & Save Quotation ⬇️</button>
+        </form>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- HISTORY / DASHBOARD SECTION -->
+    <!-- ========================================== -->
+    <div id="history-section" class="container" style="display:none; max-width: 950px;">
+        <h2 style="text-align: center; color: #333;">Dashboard & Financials</h2>
+        
+        <div class="form-grid" style="grid-template-columns: 1fr 1fr 1fr 1fr; margin-bottom: 30px; text-align: center;">
+            <div style="background: #e9ecef; padding: 15px; border-radius: 8px;">
+                <h4 style="margin: 0 0 10px 0;">Total Income (BDT)</h4>
+                <div id="inc-bdt" style="font-size: 20px; font-weight: bold; color: #28a745;">৳0</div>
+            </div>
+            <div style="background: #e9ecef; padding: 15px; border-radius: 8px;">
+                <h4 style="margin: 0 0 10px 0;">Total Due (BDT)</h4>
+                <div id="due-bdt" style="font-size: 20px; font-weight: bold; color: #dc3545;">৳0</div>
+            </div>
+            <div style="background: #e9ecef; padding: 15px; border-radius: 8px;">
+                <h4 style="margin: 0 0 10px 0;">Income (USD)</h4>
+                <div id="inc-usd" style="font-size: 20px; font-weight: bold; color: #17a2b8;">$0</div>
+            </div>
+            <div style="background: #e9ecef; padding: 15px; border-radius: 8px;">
+                <h4 style="margin: 0 0 10px 0;">Income (EUR)</h4>
+                <div id="inc-eur" style="font-size: 20px; font-weight: bold; color: #ffc107;">€0</div>
+            </div>
+        </div>
+
+        <h3>Yearly Report (BDT Only)</h3>
+        <table class="history-table" style="margin-bottom: 30px;">
+            <thead><tr><th>Year</th><th>Events</th><th>Total Value</th><th>Collected</th></tr></thead>
+            <tbody id="yearly-list"></tbody>
+        </table>
+
+        <h3>Monthly Report (Current Year BDT)</h3>
+        <table class="history-table" style="margin-bottom: 30px;">
+            <thead><tr><th>Month</th><th>Events</th><th>Total Value</th><th>Collected</th></tr></thead>
+            <tbody id="monthly-list"></tbody>
+        </table>
+
+        <h3>Quotation History</h3>
+        <div style="overflow-x: auto;">
+            <table class="history-table">
+                <thead>
+                    <tr>
+                        <th>Date</th>
+                        <th>Client Info</th>
+                        <th>Event</th>
+                        <th>Total</th>
+                        <th>Status</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="history-list">
+                    <!-- History items will be populated here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- ========================================== -->
+    <!-- OUTPUT SECTION (PDF View) -->
+    <!-- ========================================== -->
+    <div id="output-section" style="display:none; text-align: center;">
+        <div class="action-buttons">
+            <button class="btn-pdf" onclick="downloadPDF()">⬇️ Download PDF</button>
+            <button class="btn-wa" onclick="sendWhatsApp()">💬 Send WhatsApp</button>
+            <button class="btn-edit-item" style="padding: 12px 20px;" onclick="editHistoryItem(document.getElementById('firebase_doc_id').value)">✏️ Edit</button>
+            <div class="zoom-controls">
+                <button onclick="zoomOut()">➖</button>
+                <button onclick="resetZoom()">🔍</button>
+                <button onclick="zoomIn()">➕</button>
+            </div>
+        </div>
+
+        <div class="document-container" id="quotation-doc">
+            <!-- Page 1 (Main Quotation) -->
+            <div class="a4-page" id="page-1">
+                <div class="header">
+                    <div>
+                        <h2>QUOTATION</h2>
+                        <p><strong>Quote No:</strong> <span id="out_qno"></span></p>
+                        <p><strong>Date:</strong> <span id="out_today"></span></p>
+                    </div>
+                    <div style="text-align: right;">
+                        <h2 style="color: #333; margin: 0; font-size: 24px;">DocuReel</h2>
+                        <p style="color: #666; font-size: 12px; margin-top: 5px;">Photography & Cinematography</p>
+                    </div>
+                </div>
+
+                <div class="client-details">
+                    <h3>Quotation For</h3>
+                    <div class="grid-2col">
+                        <div><strong>Client Name:</strong> <span id="out_name"></span></div>
+                        <div><strong>Phone:</strong> <span id="out_phone"></span></div>
+                        <div><strong>Event Type:</strong> <span id="out_event"></span></div>
+                        <div><strong>Event Date(s):</strong> <span id="out_date"></span></div>
+                        <div><strong>Number of Shifts:</strong> <span id="out_shift"></span></div>
+                        <div><strong>Team Size:</strong> <span id="out_team"></span></div>
+                        <div><strong>Gear Details:</strong> <span id="out_gear"></span></div>
+                        <div><strong>Venue:</strong> <span id="out_venue"></span></div>
+                        <div><strong>Prints/Album:</strong> <span id="out_prints"></span></div>
+                        <div><strong>Physical Delivery:</strong> <span id="out_delivery"></span></div>
+                        <div><strong>Delivery Time:</strong> <span id="out_delivery_time"></span></div>
+
+                    </div>
+                </div>
+
+                <table class="quote-table">
+                    <thead>
+                        <tr>
+                            <th>Description</th>
+                            <th style="text-align: right; width: 150px;">Amount (<span id="out_currency_txt"></span>)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="quote-table-body">
+                        <!-- Dynamic Details (Package + Extra Services + Discount/VAT) will be injected here via JS -->
+                    </tbody>
+                </table>
+
+                <div class="totals-section">
+                    <div class="paid-stamp" id="paid_stamp">PAID</div>
+                    <div class="totals-grid">
+                        <div class="totals-row total-highlight">
+                            <div>GRAND TOTAL (<span id="out_grand_currency"></span>)</div>
+                            <div id="out_total"></div>
+                        </div>
+                        <div class="totals-row">
+                            <div>Advance Received</div>
+                            <div id="out_advance"></div>
+                        </div>
+                        <div class="totals-row due-highlight">
+                            <div>TOTAL DUE</div>
+                            <div id="out_due"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="signature-section">
+                    <div class="sig-box"><div class="sig-line">Client Signature</div></div>
+                    <div class="sig-box">
+                        <img id="out_sig_img" src="" alt="Signature" style="display:none; height: 50px; margin-bottom: 5px;">
+                        <div class="sig-line">Authorized Signatory</div>
+                        <div id="out_sig_name" style="font-size: 14px; font-weight: bold; margin-top: 5px;"></div>
+                    </div>
+                </div>
+
+                <div id="company-details-block" class="footer">
+                    <p><strong>DocuReel Photography & Cinematography</strong></p>
+                    <p>Savar, Dhaka | +8801736-544498 | contact.docureel@gmail.com</p>
+                </div>
+            </div> <!-- End Page 1 -->
+
+            <!-- Page 2 (Terms & Conditions) -->
+            <div class="a4-page" id="terms-page" style="display: none;">
+                <div style="padding: 20px;">
+                    <h2 style="text-align: center; color: #333; margin-bottom: 30px; border-bottom: 2px solid #a32a2a; padding-bottom: 10px;">Terms & Conditions</h2>
+                    <div style="font-size: 14px; color: #444; line-height: 1.8;">
+                        <ol style="padding-left: 20px;">
+                            <li style="margin-bottom: 10px;"><strong>Booking & Advance:</strong> A minimum of 50% advance payment is required to confirm the booking. The remaining 50% must be paid on the final event day.</li>
+                            <li style="margin-bottom: 10px;"><strong>Cancellation Policy:</strong> Advance payments are non-refundable in case of cancellation by the client.</li>
+                            <li style="margin-bottom: 10px;"><strong>Delivery Timeline:</strong> Final deliverables will be provided as per the timeline mentioned in the quotation.</li>
+                            <li style="margin-bottom: 10px;"><strong>Extra Time Charge:</strong> For BDT packages, an additional charge of 1500 BDT per hour will be applied for overtime beyond the standard shift duration.</li>
+                            <li style="margin-bottom: 10px;"><strong>Travel & Accommodation:</strong> For events outside Dhaka, the client is responsible for providing standard travel and accommodation for the crew.</li>
+                            <li style="margin-bottom: 10px;"><strong>Data Security:</strong> We retain event data for a maximum of 6 months. Clients are advised to collect and backup their data within this period.</li>
+                            <li style="margin-bottom: 10px;"><strong>Copyright:</strong> DocuReel reserves the right to use the photos/videos for promotional purposes unless exclusively requested otherwise by the client.</li>
+                        </ol>
+                    </div>
+                </div>
+            </div> <!-- End Page 2 -->
+        </div>
+    </div>
+
+    <!-- Required Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    
+    <!-- ?v=11 is added to bypass cache -->
+    <script src="script.js?v=11"></script>
+</body>
+</html>
