@@ -1,0 +1,55 @@
+body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f7f6; margin: 0; padding: 20px; color: #333; }
+.container { max-width: 800px; margin: 0 auto; background: white; padding: 30px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); }
+.nav-tabs { display: flex; justify-content: center; gap: 10px; margin-bottom: 20px; }
+.nav-tabs button { padding: 10px 20px; border: none; background: #ddd; cursor: pointer; border-radius: 5px; font-weight: bold; font-size: 16px; }
+.nav-tabs button.active-tab { background: #8b2b2b; color: white; }
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-bottom: 20px; }
+.form-control { width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; font-size: 14px; }
+.checkbox-container { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 14px; }
+.btn-submit, .btn-add-extra { background: #8b2b2b; color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; font-size: 16px; cursor: pointer; font-weight: bold; margin-top: 10px; }
+.btn-submit:hover { background: #7a2323; }
+.btn-add-extra { background: #28a745; width: auto; padding: 8px 15px; font-size: 14px; }
+.btn-remove-extra { background: #dc3545; color: white; border: none; border-radius: 5px; cursor: pointer; padding: 0 10px; }
+.history-table { width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px; }
+.history-table th, .history-table td { border: 1px solid #ddd; padding: 12px; text-align: left; }
+.history-table th { background-color: #8b2b2b; color: white; }
+.btn-view, .btn-edit-item, .btn-delete-item { border: none; padding: 6px 10px; border-radius: 4px; cursor: pointer; color: white; font-weight: bold; margin-right: 5px; }
+.btn-view { background: #17a2b8; } .btn-edit-item { background: #ffc107; color: #333; } .btn-delete-item { background: #dc3545; }
+.action-buttons { margin-bottom: 20px; display: flex; justify-content: center; gap: 15px; flex-wrap: wrap; }
+.action-buttons button { padding: 12px 25px; border: none; border-radius: 5px; font-size: 16px; font-weight: bold; cursor: pointer; color: white; box-shadow: 0 4px 6px rgba(0,0,0,0.1); }
+.btn-pdf { background-color: #8b2b2b; } .btn-wa { background-color: #25D366; }
+.zoom-controls { display: flex; gap: 5px; background: white; padding: 5px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); }
+.zoom-controls button { background: #f0f0f0; border: 1px solid #ccc; padding: 5px 15px; border-radius: 3px; cursor: pointer; font-size: 18px; color: #333; font-weight: bold; }
+.document-container { transform-origin: top center; transition: transform 0.3s ease; }
+.a4-page { width: 210mm; min-height: 297mm; margin: 0 auto 20px auto; background: white; box-shadow: 0 0 10px rgba(0,0,0,0.2); box-sizing: border-box; position: relative; overflow: hidden; text-align: left; }
+.paid-stamp { position: absolute; font-size: 80px; color: rgba(40, 167, 69, 0.15); font-weight: bold; text-transform: uppercase; transform: rotate(-30deg); border: 8px solid rgba(40, 167, 69, 0.15); border-radius: 10px; padding: 10px 30px; letter-spacing: 10px; z-index: 0; pointer-events: none; }
+
+/* EXACT IMAGE 2 DESIGN */
+.classic-theme { background-color: #fdf5e6 !important; color: #222; padding: 50px 60px; font-family: 'Times New Roman', serif; position: relative; min-height: 297mm; box-sizing: border-box; }
+.watermark { position: absolute; top: 55%; left: 50%; transform: translate(-50%, -50%); opacity: 0.04; font-size: 180px; font-weight: bold; font-family: 'Times New Roman', serif; pointer-events: none; z-index: 0; text-align: center; line-height: 0.9; }
+.classic-header { text-align: center; border-bottom: 2px solid #8b2b2b; padding-bottom: 12px; margin-bottom: 25px; z-index: 1; position: relative;}
+.brand-name { margin: 0; font-size: 40px; color: #222; letter-spacing: 2px; }
+.brand-name span { color: #8b2b2b; }
+.brand-sub { margin: 5px 0 2px 0; font-size: 14px; font-weight: bold; color: #444; letter-spacing: 2px; text-transform: uppercase; }
+.brand-address { margin: 0; font-size: 12px; font-style: italic; color: #666; }
+.classic-title { text-align: center; color: #8b2b2b; letter-spacing: 4px; font-size: 22px; margin: 25px 0; font-weight: bold; text-transform: uppercase; z-index: 1; position: relative; }
+.classic-meta { display: flex; justify-content: space-between; font-size: 13px; margin-bottom: 25px; font-weight: bold; z-index: 1; position: relative; }
+.classic-section { margin-bottom: 25px; z-index: 1; position: relative; }
+.section-heading { color: #8b2b2b; font-style: italic; font-size: 16px; border-bottom: 1px solid #d3cbb8; padding-bottom: 3px; margin-bottom: 12px; font-weight: bold; }
+.info-row { display: flex; font-size: 13px; margin-bottom: 7px; font-weight: bold; }
+.info-row .lbl { width: 150px; color: #222; }
+.info-row .colon { width: 20px; }
+.info-row .val { flex: 1; font-weight: normal; color: #111; }
+.classic-pack-row { display: flex; align-items: flex-end; margin-bottom: 10px; font-size: 14px; font-weight: bold; color: #222; z-index: 1; position: relative; }
+.classic-pack-row .dots { flex-grow: 1; border-bottom: 1px dotted #888; margin: 0 10px; position: relative; top: -4px; }
+.classic-totals { margin-top: 15px; border-top: 1px dotted #d3cbb8; padding-top: 12px; width: 280px; float: right; font-size: 14px; font-weight: bold; z-index: 1; position: relative; }
+.total-row { display: flex; justify-content: space-between; margin-bottom: 6px; }
+.total-row span:last-child { text-align: right; }
+.due-row { color: #8b2b2b; font-size: 18px; margin-top: 10px; font-weight: bold; }
+.classic-signature { margin-top: 80px; clear: both; text-align: right; z-index: 1; position: relative; }
+.classic-signature .sig-line { border-top: 1px solid #222; display: inline-block; padding-top: 5px; text-align: center; width: 200px; font-size: 13px; font-weight: bold; }
+@media (max-width: 800px) { .form-grid { grid-template-columns: 1fr; } .action-buttons { flex-direction: column; align-items: center; } .action-buttons button { width: 100%; } }
+/* Watermark & Zoom CSS */
+.watermark-img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 400px; opacity: 0.08; pointer-events: none; z-index: 0; }
+.zoom-controls { display: flex; gap: 5px; background: white; padding: 5px; border-radius: 5px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); justify-content: center; }
+.zoom-controls button { background: #f0f0f0; border: 1px solid #ccc; padding: 5px 20px; border-radius: 3px; cursor: pointer; font-size: 18px; color: #333; font-weight: bold; }

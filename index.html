@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DocuReel Quotation</title>
+    <!-- Flatpickr CSS -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/flatpickr/dist/flatpickr.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Top Navigation -->
+    <div class="nav-tabs">
+        <button id="tab-form" class="active-tab" onclick="clearFormIfNew(); showSection('form-section')">📝 Create New</button>
+        <button id="tab-history" onclick="showSection('history-section')">📊 Dashboard & History</button>
+    </div>
+
+    <!-- Password Modal -->
+    <div id="custom-pass-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 1000; justify-content: center; align-items: center;">
+        <div style="background: white; padding: 30px; border-radius: 10px; text-align: center; max-width: 300px; width: 90%;">
+            <h3 style="margin-top: 0; color: #333;">Enter Password</h3>
+            <input type="password" id="custom-pass-input" placeholder="Enter PIN" style="width: 100%; padding: 10px; margin-bottom: 15px; border: 1px solid #ccc; border-radius: 5px; text-align: center; font-size: 18px;">
+            <button onclick="checkPassword()" style="background: #8b2b2b; color: white; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; font-weight: bold;">Unlock</button>
+            <button onclick="closePassModal()" style="background: #ccc; color: #333; border: none; padding: 10px 20px; border-radius: 5px; cursor: pointer; width: 100%; margin-top: 10px;">Cancel</button>
+            <p id="pass-error-msg" style="color: red; font-size: 12px; margin-top: 10px; display: none;">Incorrect Password!</p>
+        </div>
+    </div>
+
+    <!-- FORM SECTION -->
+    <div id="form-section" class="container">
+        <h2 id="form-title" style="text-align: center; color: #333; margin-bottom: 25px;">Create Quotation</h2>
+        <form id="quotation-form">
+            <input type="hidden" id="firebase_doc_id">
+            <input type="hidden" id="edit_id">
+
+            <div class="form-grid">
+                <div>
+                    <label>Client Name</label>
+                    <input type="text" id="c_name" required class="form-control">
+                </div>
+                <div>
+                    <label>Phone Number</label>
+                    <input type="text" id="c_phone" required class="form-control">
+                </div>
+                <div>
+                    <label>Event Type</label>
+                    <select id="c_event" required class="form-control">
+                        <option value="Wedding">Wedding</option>
+                        <option value="Pre-Wedding">Pre-Wedding</option>
+                        <option value="Post-Wedding">Post-Wedding</option>
+                        <option value="Reception">Reception</option>
+                        <option value="Cinematography">Cinematography</option>
+                        <option value="Birthday">Birthday</option>
+                        <option value="Corporate">Corporate</option>
+                        <option value="Fashion Shoot">Fashion Shoot</option>
+                        <option value="Product Shoot">Product Shoot</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Event Date(s)</label>
+                    <input type="text" id="c_date" required class="form-control">
+                </div>
+                <div>
+                    <label>Number of Shifts</label>
+                    <input type="number" id="c_num_shifts" required class="form-control" min="1" value="1">
+                </div>
+                <div>
+                    <label>Shift Details</label>
+                    <input type="text" id="c_shift_details" required class="form-control">
+                </div>
+                <div>
+                    <label>No. of Photographers</label>
+                    <input type="number" id="c_photo_count" class="form-control" min="0">
+                </div>
+                <div>
+                    <label>No. of Cinematographers</label>
+                    <input type="number" id="c_cinema_count" class="form-control" min="0">
+                </div>
+                <div>
+                    <label>Gear Details (Optional)</label>
+                    <input type="text" id="c_gear" class="form-control">
+                </div>
+                <div>
+                    <label>Venue</label>
+                    <input type="text" id="c_venue" required class="form-control">
+                </div>
+                <div>
+                    <label>Payment Method</label>
+                    <select id="c_payment" class="form-control">
+                        <option value="Cash">Cash</option>
+                        <option value="Bank Transfer">Bank Transfer</option>
+                        <option value="bKash">bKash</option>
+                        <option value="Nagad">Nagad</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Printed Photos / Album Details</label>
+                    <input type="text" id="c_prints" class="form-control">
+                </div>
+                <div>
+                    <label>Physical Delivery Option</label>
+                    <input type="text" id="c_delivery" class="form-control">
+                </div>
+                <div>
+                    <label>Delivery Time</label>
+                    <select id="c_delivery_time" class="form-control">
+                        <option value="On Season">On Season (30-45 Days)</option>
+                        <option value="Off Season">Off Season (15-30 Days)</option>
+                    </select>
+                </div>
+                <div>
+                    <label>Currency</label>
+                    <select id="c_currency" class="form-control">
+                        <option value="BDT">BDT (৳)</option>
+                        <option value="USD">USD ($)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="checkbox-container">
+                <input type="checkbox" id="c_extra_time" checked disabled>
+                <label>Include "Extra Time" (Default for BDT)</label>
+            </div>
+            <div class="checkbox-container">
+                <input type="checkbox" id="c_show_contact" checked>
+                <label>Show Company Contact Details (Footer)</label>
+            </div>
+            <div class="checkbox-container">
+                <input type="checkbox" id="c_show_terms" checked>
+                <label>Include Terms & Conditions Page</label>
+            </div>
+
+            <hr>
+            <h3>Package & Pricing</h3>
+            <div class="form-grid">
+                <div>
+                    <label>Primary Package Name</label>
+                    <input type="text" id="p_name" required class="form-control">
+                </div>
+                <div>
+                    <label>Package Price (Per Shift)</label>
+                    <input type="number" id="p_price" required class="form-control" min="0">
+                </div>
+                <div style="grid-column: 1 / -1;">
+                    <label>Extra Services</label>
+                    <div id="extra-services-container">
+                        <div class="extra-service-row" style="display: flex; gap: 10px; margin-bottom: 10px;">
+                            <input type="text" class="form-control e_name_input" placeholder="Service Name">
+                            <input type="number" class="form-control e_price_input" placeholder="Price" min="0">
+                            <button type="button" class="btn-remove-extra" onclick="removeExtraRow(this)" style="display:none;">❌</button>
+                        </div>
+                    </div>
+                    <button type="button" class="btn-add-extra" onclick="addExtraRow()">+ Add Service</button>
+                </div>
+                <div style="grid-column: 1 / -1;">
+                    <label>Travel Charge</label>
+                    <input type="number" id="t_charge" class="form-control" min="0">
+                </div>
+            </div>
+            
+            <hr>
+            <h3>Discount & Payments</h3>
+            <div class="form-grid">
+                <div>
+                    <label>Discount (%)</label>
+                    <input type="number" id="discount_pct" class="form-control" min="0" max="100">
+                </div>
+                <div>
+                    <label>VAT (%)</label>
+                    <input type="number" id="vat_pct" class="form-control" min="0" max="100">
+                </div>
+                <div>
+                    <label>Advance Received</label>
+                    <input type="number" id="adv_pay" class="form-control" min="0">
+                </div>
+                <div>
+                    <label>Pay Against Due (Edit Mode)</label>
+                    <input type="number" id="due_pay" class="form-control" min="0" disabled>
+                </div>
+                <div style="grid-column: 1 / -1;">
+                    <label>Signature</label>
+                    <select id="c_signature" class="form-control">
+                        <option value="None">None</option>
+                        <option value="Shovon">Shovon</option>
+                        <option value="Sazzid">Sazzid</option>
+                    </select>
+                </div>
+            </div>
+            <button type="submit" class="btn-submit" id="submit-btn-text">Generate Quotation ⬇️</button>
+        </form>
+    </div>
+    <!-- History Section -->
+    <div id="history-section" class="container" style="display:none; max-width: 800px;">
+        <h2 style="text-align: center;">Dashboard & History</h2>
+        <div class="form-grid" style="grid-template-columns: 1fr 1fr; text-align: center;">
+            <div style="background: #e9ecef; padding: 15px; border-radius: 8px;">
+                <h4>Total Income (BDT)</h4>
+                <div id="inc-bdt" style="font-size: 20px; font-weight: bold; color: #28a745;">৳0</div>
+            </div>
+            <div style="background: #e9ecef; padding: 15px; border-radius: 8px;">
+                <h4>Total Due (BDT)</h4>
+                <div id="due-bdt" style="font-size: 20px; font-weight: bold; color: #dc3545;">৳0</div>
+            </div>
+        </div>
+        <div style="overflow-x: auto; margin-top:20px;">
+            <table class="history-table">
+                <thead>
+                    <tr><th>Date</th><th>Client</th><th>Event</th><th>Total</th><th>Status</th><th>Actions</th></tr>
+                </thead>
+                <tbody id="history-list"></tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- EXACT PDF OUTPUT SECTION -->
+    <div id="output-section" style="display:none; text-align: center;">
+        <div class="action-buttons">
+            <button class="btn-pdf" onclick="downloadPDF()">⬇️ Download PDF</button>
+            <button class="btn-wa" onclick="sendWhatsApp()">💬 Send WhatsApp</button>
+            <button class="btn-edit-item" style="padding: 12px 20px;" onclick="editHistoryItem(document.getElementById('firebase_doc_id').value)">✏️ Edit</button>
+        </div>
+        
+        <!-- Zoom Controls for Preview -->
+        <div class="zoom-controls" style="margin-bottom: 20px;">
+            <button onclick="zoomOut()">➖</button>
+            <button onclick="resetZoom()">🔍</button>
+            <button onclick="zoomIn()">➕</button>
+        </div>
+
+        <div class="document-container" id="quotation-doc" style="transform-origin: top center; transition: transform 0.3s ease;">
+            <!-- Page 1 -->
+            <div class="a4-page classic-theme" id="page-1">
+                <!-- 🟢 লোগো জলছাপ হিসেবে বসানো হয়েছে -->
+                <img src="logo.png" class="watermark-img" alt="Watermark">
+                
+                <div class="classic-header">
+                    <img src="logo.png" alt="DocuReel Logo" style="height: 85px; margin-bottom: 5px;">
+                    <p class="brand-sub">PHOTOGRAPHY & CINEMATOGRAPHY</p>
+                    <p class="brand-address" id="company-details-block" style="display:block;">D 9/6, Kazimokmapara, Bank Colony, Savar, Dhaka</p>
+                </div>
+                
+                <h2 class="classic-title">QUOTATION</h2>
+                
+                <div class="classic-meta">
+                    <div>Quotation No : <span id="out_qno"></span></div>
+                    <div>Date : <span id="out_today"></span></div>
+                </div>
+
+                <div class="classic-section">
+                    <h3 class="section-heading">Client Information</h3>
+                    <div class="info-row"><div class="lbl">Name</div><div class="colon">:</div><div class="val" id="out_name"></div></div>
+                    <div class="info-row"><div class="lbl">Phone</div><div class="colon">:</div><div class="val" id="out_phone"></div></div>
+                    <div class="info-row"><div class="lbl">Event</div><div class="colon">:</div><div class="val" id="out_event"></div></div>
+                    <div class="info-row"><div class="lbl">Shift(s)</div><div class="colon">:</div><div class="val" id="out_shift"></div></div>
+                    <div class="info-row"><div class="lbl">Event Date</div><div class="colon">:</div><div class="val" id="out_date"></div></div>
+                    <div class="info-row"><div class="lbl">Venue</div><div class="colon">:</div><div class="val" id="out_venue"></div></div>
+                    <div class="info-row"><div class="lbl">Payment By</div><div class="colon">:</div><div class="val" id="out_payment"></div></div>
+                    <div class="info-row"><div class="lbl">Gear Details</div><div class="colon">:</div><div class="val" id="out_gear"></div></div>
+                </div>
+
+                <div class="classic-section">
+                    <h3 class="section-heading">Package Details</h3>
+                    <div id="classic-package-list"></div>
+                    <div class="classic-totals">
+                        <div class="total-row"><span>Grand Total</span><span><span id="out_grand_currency"></span> <span id="out_total"></span></span></div>
+                        <div class="total-row"><span>Advance Paid</span><span><span id="out_advance"></span></span></div>
+                        <div class="total-row due-row"><span>Total Due</span><span><span id="out_due"></span></span></div>
+                    </div>
+                    <div style="clear:both;"></div>
+                </div>
+
+                <div class="classic-section" style="margin-top: 30px;">
+                    <h3 class="section-heading">Deliverables & Policies</h3>
+                    <div class="info-row"><div class="lbl">Prints & Album</div><div class="colon">:</div><div class="val" id="out_prints"></div></div>
+                    <div class="info-row" style="align-items: flex-start;"><div class="lbl">Delivery Method</div><div class="colon">:</div><div class="val"><span id="out_delivery"></span><br><small style="font-style:italic; color:#666;">* All files given by Google Drive validity 6 months.</small></div></div>
+                    <div class="info-row"><div class="lbl">Delivery Time</div><div class="colon">:</div><div class="val" id="out_delivery_time"></div></div>
+                    <div class="info-row"><div class="lbl">Extra Time</div><div class="colon">:</div><div class="val"><strong>20% of Total Package Cost Per Extra Hour</strong></div></div>
+                </div>
+
+                <div class="classic-signature">
+                    <div class="sig-line">
+                        <img id="out_sig_img" src="" alt="Signature" style="display:none; height: 40px; margin-bottom: 5px; margin-left: auto; margin-right: auto;"><br>
+                        Authorized Signature<br><strong id="out_sig_name">DocuReel</strong>
+                    </div>
+                </div>
+                <div class="paid-stamp" id="paid_stamp" style="top: 40%; left: 35%;">PAID</div>
+            </div>
+
+            <!-- Page 2 (Terms as JPG image) -->
+            <div class="a4-page" id="terms-page" style="display: none; padding: 0; background: white; text-align: center;">
+                <img src="terms.jpg" alt="Terms and Conditions" style="width: 100%; height: 100%; object-fit: contain;">
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.1/firebase-firestore-compat.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src="script.js?v=zoomUpdate"></script>
+</body>
+</html>
