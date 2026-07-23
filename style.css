@@ -1,0 +1,99 @@
+/* =========================================
+   Print & PDF Auto Page-Break Fix 
+========================================= */
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 0 !important; /* Removes browser default margins */
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Hide UI elements during print */
+    .nav-tabs, .action-buttons, #form-section, #history-section {
+        display: none !important;
+    }
+    
+    .document-container {
+        transform: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .a4-page {
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        page-break-after: always !important; /* Forces page break perfectly */
+        page-break-inside: avoid !important;
+        overflow: hidden !important;
+    }
+
+    #terms-page {
+        page-break-before: always !important;
+    }
+
+    .html2pdf__page-break {
+        display: none !important;
+    }
+}
+/* =========================================
+   Print & PDF Auto Page-Break Fix 
+========================================= */
+@media print {
+    @page {
+        size: A4 portrait;
+        margin: 0 !important; /* Removes browser default margins */
+    }
+    body {
+        margin: 0;
+        padding: 0;
+        background: #fff;
+        -webkit-print-color-adjust: exact;
+        print-color-adjust: exact;
+    }
+    
+    /* Hide UI elements during print */
+    .nav-tabs, .action-buttons, #form-section, #history-section {
+        display: none !important;
+    }
+    
+    .document-container {
+        transform: none !important;
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    .a4-page {
+        width: 210mm !important;
+        height: 297mm !important;
+        margin: 0 !important;
+        box-shadow: none !important;
+        page-break-after: always !important; /* Forces page break perfectly */
+        page-break-inside: avoid !important;
+        overflow: hidden !important;
+    }
+
+    #terms-page {
+        page-break-before: always !important;
+    }
+
+    .html2pdf__page-break {
+        display: none !important;
+    }
+}
+@media print {
+    @page { size: A4 portrait; margin: 0 !important; }
+    body { margin: 0; padding: 0; background: #fff; -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+    .nav-tabs, .action-buttons, #form-section, #history-section { display: none !important; }
+    .document-container { transform: none !important; margin: 0 !important; padding: 0 !important; }
+    .a4-page { width: 210mm !important; height: 297mm !important; margin: 0 !important; box-shadow: none !important; page-break-after: always !important; page-break-inside: avoid !important; overflow: hidden !important; }
+    #terms-page { page-break-before: always !important; }
+    .html2pdf__page-break { display: none !important; }
+}
